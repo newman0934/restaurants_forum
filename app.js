@@ -21,6 +21,10 @@ app.use((req,res,next) => {
     next()
 })
 
+const passport = require("./config/passport")
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 
@@ -30,4 +34,4 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`)
 })
 
-require("./routes")(app)
+require("./routes")(app, passport)
