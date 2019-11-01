@@ -3,6 +3,9 @@ const db = require("./models")
 const app = express()
 const port = 3000
 
+const methodOverride = require("method-override")
+app.use(methodOverride("_method"))
+
 const handlebars = require("express-handlebars")
 app.engine("handlebars",handlebars({ defaultLayout: 'main' }))
 app.set("view engine","handlebars")
@@ -25,7 +28,6 @@ app.use((req,res,next) => {
     res.locals.success_messages = req.flash("success_messages")
     res.locals.error_messages = req.flash("error_messages")
     res.locals.user = req.user
-    console.log(req.user)
     next()
 })
 
