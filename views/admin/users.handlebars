@@ -1,0 +1,44 @@
+<h1>會員後台</h1>
+
+<div class="mb-3">
+    <a href="/admin/restaurants">
+        <button type="button" class="btn btn-primary">Restaurants</button>
+    </a>
+
+    <a href="/admin/users">
+        <button type="button" class="btn btn-warning">Users</button>
+    </a>
+</div>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>權限</th>
+            <th>設定權限</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each users}}
+        <tr>
+            <th>{{this.id}}</th>
+            <td>{{this.email}}</td>
+            <td>
+                {{#if this.isAdmin}}
+                <span>Admin</span>
+                {{else}}
+                <span>User</span>
+                {{/if}}
+            </td>
+            <td>
+                <form action="/admin/users/{{this.id}}?_method=PUT" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-link p-0">
+                        {{#if this.isAdmin}} <button class="btn btn-outline-success">set as user</button> {{else}} <button class="btn btn-outline-danger">as admin</button>  {{/if}}
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
