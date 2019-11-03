@@ -132,12 +132,14 @@ const adminController = {
                     user.update({
                         isAdmin: false
                     }).then(() => {
+                        req.flash("success_message", "管理員已經成功更改為一般使用者")
                         return res.redirect('/admin/users')
                     })
                 } else {
                     user.update({
                         isAdmin: true
                     }).then(() => {
+                        req.flash("success_message", "一般使用者已經成功更改為管理員")
                         return res.redirect('/admin/users')
                     })
                 }
