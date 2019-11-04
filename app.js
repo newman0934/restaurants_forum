@@ -7,7 +7,7 @@ const methodOverride = require("method-override")
 app.use(methodOverride("_method"))
 
 const handlebars = require("express-handlebars")
-app.engine("handlebars",handlebars({ defaultLayout: 'main' }))
+app.engine("handlebars",handlebars({ defaultLayout: 'main', helpers:require("./config/handlebars-helpers") }))
 app.set("view engine","handlebars")
 
 const bodyParser = require("body-parser")
