@@ -2,6 +2,7 @@ const restControllers = require("../controllers/restControllers");
 const adminController = require("../controllers/adminController");
 const userController = require("../controllers/userController");
 const categoryController = require("../controllers/categoryController")
+const commentController = require("../controllers/commentController")
 const multer = require("multer")
 const upload = multer({dest: "temp/"})
 
@@ -55,6 +56,8 @@ module.exports = (app, passport) => {
         }),
         userController.signIn
     );
+
+    app.post("/comments",authenticated, commentController.postComment)
 
     app.get("/logout", userController.logout);
 };
