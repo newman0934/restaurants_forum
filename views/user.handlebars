@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row border mb-4 p-3">
     <div class="col-sm-4">
         <img class="img-thumbnail" src="{{user.image}}" alt="">
     </div>
@@ -6,7 +6,15 @@
         <p>{{user.name}}</p>
         <p>{{user.email}}</p>
         <a href="/users/{{user.id}}/edit">
-        <button class="btn btn-primary">編輯</button>
+            <button class="btn btn-primary">編輯</button>
         </a>
     </div>
 </div>
+    <div class="row border p-2">
+        <div class="col-sm-12">
+            <h2>評論的店家共有{{totalComments}}間</h2>
+            {{#each commentRestaurant}}
+                <img  class="col-sm-2 px-0" src="{{this}}" alt=""> 
+            {{/each}}
+        </div>
+    </div>

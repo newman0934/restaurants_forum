@@ -2,6 +2,7 @@ const db = require('../models')
 const Restaurant = db.Restaurant
 const User = db.User
 const Category = db.Category
+const Comment = db.Comment
 const fs = require("fs")
 const imgur = require("imgur-node-api")
 const IMGUR_CLIENT_ID = "aa4a5e6ee3ad18c"
@@ -159,8 +160,19 @@ const adminController = {
     },
     getUser: (req,res) => {
         if(req.user.id == req.params.id){
-            return User.findByPk(req.params.id).then(user => {
-                return res.render("user",{user})
+            return User.findByPk(req.params.id,{
+                include:[
+                    Comment, {model: Comment, include: [Restaurant]}
+                ]
+            }).then(user => {
+                let totalComments = user.dataValues.Comments.length
+                let commentRestaurant = []
+   
+                user.Comments.map(item => {
+                    commentRestaurant.push(item.Restaurant.image)                    
+                })
+                
+                return res.render("user",{user,totalComments,commentRestaurant})
             })
         }else{
             req.flash("error_messages","id不符")
