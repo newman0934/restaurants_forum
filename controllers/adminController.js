@@ -156,6 +156,57 @@ const adminController = {
                     })
                 }
             })
+    },
+    getUser: (req,res) => {
+        if(req.user.id == req.params.id){
+            return User.findByPk(req.params.id).then(user => {
+                return res.render("user",{user})
+            })
+        }else{
+            req.flash("error_messages","id不符")
+            return res.redirect(`/users/${req.user.id}`)
+        }
+    },
+    editUser: (req,res) => {
+        if(req.user.id == req.params.id){
+            return User.findByPk(req.params.id).then(user => {
+                return res.render("editUser",{user})
+            })
+        }else{
+            req.flash("error_messages","id不符")
+            return res.redirect(`/users/${req.user.id}/edit`)
+        }
+  
+    },
+    putUser: (req,res) =>{
+        const {file} = req
+        console.log(file)
+        if(file){
+
+            imgur.setClientID(IMGUR_CLIENT_ID)
+            imgur.upload(file.path, (err, img) => {
+                return User.findByPk(req.params.id).then(user => {
+                    user.update({
+                        name: req.body.name,
+                        image: file ? img.data.link : user.image
+                    }).then(user => {
+                        req.flash("success.messages", "資料已修改")
+                        res.redirect(`/users/${user.id}`)
+                    })
+                })
+            })
+        }else{
+            return User.findByPk(req.params.id).then(user => {
+                user.update({
+                    name: req.body.name,
+                    image: user.image
+                }).then(user => {
+                    req.flash("success.messages", "資料已修改")
+                    res.redirect(`/users/${user.id}`)
+                })
+            })
+        }
+
     }
 }
 
