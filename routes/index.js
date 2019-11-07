@@ -51,7 +51,7 @@ module.exports = (app, passport) => {
     app.get('/restaurants', authenticated, restControllers.getRestaurants)
     app.get("/restaurants/feeds", authenticated, restControllers.getFeeds)
     app.get('/restaurants/:id', authenticated, restControllers.getRestaurant)
-
+    app.get('/restaurants/:id/dashboard', authenticated, restControllers.getDashboard)
     app.get("/signup", userController.signUpPage);
     app.post("/signup", userController.signUp);
 
