@@ -24,17 +24,6 @@ module.exports = (app, passport) => {
         }
         res.redirect('/signin')
     }
-    const authenticatedUser = (req, res, next) => {
-        if(req.isAuthenticated()){
-            if(req.user.id === req.params.id){
-                return next()
-            }
-            return res.redirect(`/users/${req.user.id}`)
-        }
-    }
-
-    app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
-    app.get('/restaurants', authenticated, restControllers.getRestaurants)
 
     app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
     app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
@@ -58,6 +47,9 @@ module.exports = (app, passport) => {
     app.get("/users/:id/edit", authenticated, adminController.editUser)
     app.put("/users/:id", authenticated, upload.single('image'), adminController.putUser)
 
+    app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
+    app.get('/restaurants', authenticated, restControllers.getRestaurants)
+    app.get("/restaurants/feeds", authenticated, restControllers.getFeeds)
     app.get('/restaurants/:id', authenticated, restControllers.getRestaurant)
 
     app.get("/signup", userController.signUpPage);
