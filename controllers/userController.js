@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt-nodejs");
 const db = require("../models");
 const User = db.User;
 const Favorite = db.Favorite
+const Like = db.Like
 
 let userController = {
   signUpPage: (req, res) => {
@@ -13,7 +14,11 @@ let userController = {
       req.flash('error_messages', '兩次密碼輸入不同！')
       return res.redirect('/signup')
     } else {
-      User.findOne({ where: { email: req.body.email } }).then(user => {
+      User.findOne({
+        where: {
+          email: req.body.email
+        }
+      }).then(user => {
         if (user) {
           req.flash("error_messages", "信箱重複!");
           return res.redirect("/signup");
@@ -38,12 +43,12 @@ let userController = {
   signInPage: (req, res) => {
     return res.render('signin')
   },
- 
+
   signIn: (req, res) => {
     req.flash('success_messages', '成功登入！')
     res.redirect('/restaurants')
   },
- 
+
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')
     req.logout()
@@ -59,18 +64,41 @@ let userController = {
   },
   removeFavorite: (req, res) => {
     return Favorite.findOne({
-      where: {
-        UserId: req.user.id,
-        RestaurantId: req.params.restaurantId
-      }
-    })
+        where: {
+          UserId: req.user.id,
+          RestaurantId: req.params.restaurantId
+        }
+      })
       .then((favorite) => {
         favorite.destroy()
           .then((restaurant) => {
             return res.redirect('back')
           })
       })
-  }
+  },
+
+  addLike: (req, res) => {
+    return Like.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    })
+     .then((restaurant) => {
+       return res.redirect('back')
+     })
+   },
+   
+   removeLike: (req, res) => {
+    return Like.findOne({where: {
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    }})
+      .then((Like) => {
+        Like.destroy()
+         .then((restaurant) => {
+           return res.redirect('back')
+         })
+      })
+   }
 };
 
 module.exports = userController;
