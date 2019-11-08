@@ -9,10 +9,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   User.associate = function(models) {
     User.hasMany(models.Comment)
-    User.belongsToMany(models.Restaurant,{
+    User.belongsToMany(models.Restaurant, {
       through: models.Favorite,
-      foreignKey: "UserId",
-      as:"FavoritedRestaurants"
+      foreignKey: 'UserId',
+      as: 'FavoritedRestaurants'
     })
   };
   return User;

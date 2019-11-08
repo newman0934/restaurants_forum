@@ -58,14 +58,18 @@ let userController = {
     })
   },
   removeFavorite: (req, res) => {
-    return Favorite.findOne({where: {
-      UserId: req.user.id,
-      RestaurantId: req.params.restaurantId
-    }}).then(favorite => {
-      favorite.destroy()
-    }).then(restaurant =>{
-      return res.redirect("back")
+    return Favorite.findOne({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }
     })
+      .then((favorite) => {
+        favorite.destroy()
+          .then((restaurant) => {
+            return res.redirect('back')
+          })
+      })
   }
 };
 
