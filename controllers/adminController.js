@@ -9,7 +9,9 @@ const IMGUR_CLIENT_ID = "aa4a5e6ee3ad18c"
 
 const adminController = {
     getRestaurants: (req, res) => {
-        return Restaurant.findAll({include: [Category]}).then(restaurants => {
+        return Restaurant.findAll({
+            include: [Category]
+        }).then(restaurants => {
             return res.render("admin/restaurants", {
                 restaurants: restaurants
             })
@@ -17,7 +19,7 @@ const adminController = {
     },
     createRestaurant: (req, res) => {
         Category.findAll().then(categories => {
-            return res.render("admin/create",{
+            return res.render("admin/create", {
                 categories
             })
         })
@@ -63,7 +65,9 @@ const adminController = {
         }
     },
     getRestaurant: (req, res) => {
-        return Restaurant.findByPk(req.params.id, {include: [Category]}).then(restaurant => {
+        return Restaurant.findByPk(req.params.id, {
+            include: [Category]
+        }).then(restaurant => {
             return res.render("admin/restaurant", {
                 restaurant
             })
@@ -91,20 +95,20 @@ const adminController = {
             imgur.setClientID(IMGUR_CLIENT_ID)
             imgur.upload(file.path, (err, img) => {
                 return Restaurant.findByPk(req.params.id)
-                .then((restaurant) => {
-                    restaurant.update({
-                        name: req.body.name,
-                        tel: req.body.tel,
-                        address: req.body.address,
-                        opening_hours: req.body.opening_hours,
-                        description: req.body.description,
-                        image: file ? img.data.link : restaurant.image,
-                        CategoryId: req.body.categoryId
-                    }).then((restaurant) => {
-                        req.flash('success_messages', 'restaurant was successfully to update')
-                        res.redirect('/admin/restaurants')
+                    .then((restaurant) => {
+                        restaurant.update({
+                            name: req.body.name,
+                            tel: req.body.tel,
+                            address: req.body.address,
+                            opening_hours: req.body.opening_hours,
+                            description: req.body.description,
+                            image: file ? img.data.link : restaurant.image,
+                            CategoryId: req.body.categoryId
+                        }).then((restaurant) => {
+                            req.flash('success_messages', 'restaurant was successfully to update')
+                            res.redirect('/admin/restaurants')
+                        })
                     })
-                })
             })
         } else {
             return Restaurant.findByPk(req.params.id)
@@ -145,7 +149,7 @@ const adminController = {
                     user.update({
                         isAdmin: false
                     }).then((user) => {
-                        req.flash("success_messages",  `${user.name}成功更改為一般使用者`)
+                        req.flash("success_messages", `${user.name}成功更改為一般使用者`)
                         return res.redirect('/admin/users')
                     })
                 } else {
@@ -158,42 +162,49 @@ const adminController = {
                 }
             })
     },
-    getUser: (req,res) => {
-        if(req.user.id == req.params.id){
-            return User.findByPk(req.params.id,{
-                include:[
-                    Comment, {model: Comment, include: [Restaurant]}
-                ]
-            }).then(user => {
-                let totalComments = user.dataValues.Comments.length
-                let commentRestaurant = []
-   
-                user.Comments.map(item => {
-                    commentRestaurant.push(item.Restaurant.image)                    
-                })
-                
-                return res.render("user",{user,totalComments,commentRestaurant})
+    getUser: (req, res) => {
+        return User.findByPk(req.params.id, {
+            include: [
+                Comment, {
+                    model: Comment,
+                    include: [Restaurant]
+                }
+            ]
+        }).then(user => {
+            let totalComments = user.dataValues.Comments.length
+            let commentRestaurant = []
+
+            user.Comments.map(item => {
+                commentRestaurant.push(item.Restaurant.image)
             })
-        }else{
-            req.flash("error_messages","id不符")
-            return res.redirect(`/users/${req.user.id}`)
-        }
+
+            return res.render("user", {
+                user,
+                totalComments,
+                commentRestaurant
+            })
+        })
+        return res.redirect(`/users/${req.user.id}`)
     },
-    editUser: (req,res) => {
-        if(req.user.id == req.params.id){
+    editUser: (req, res) => {
+        if (req.user.id == req.params.id) {
             return User.findByPk(req.params.id).then(user => {
-                return res.render("editUser",{user})
+                return res.render("editUser", {
+                    user
+                })
             })
-        }else{
-            req.flash("error_messages","id不符")
+        } else {
+            req.flash("error_messages", "id不符")
             return res.redirect(`/users/${req.user.id}/edit`)
         }
-  
+
     },
-    putUser: (req,res) =>{
-        const {file} = req
+    putUser: (req, res) => {
+        const {
+            file
+        } = req
         console.log(file)
-        if(file){
+        if (file) {
 
             imgur.setClientID(IMGUR_CLIENT_ID)
             imgur.upload(file.path, (err, img) => {
@@ -207,7 +218,7 @@ const adminController = {
                     })
                 })
             })
-        }else{
+        } else {
             return User.findByPk(req.params.id).then(user => {
                 user.update({
                     name: req.body.name,
