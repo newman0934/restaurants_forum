@@ -5,8 +5,8 @@ const Category = db.Category
 const Comment = db.Comment
 const fs = require("fs")
 const imgur = require("imgur-node-api")
-const IMGUR_CLIENT_ID = "aa4a5e6ee3ad18c"
 
+console.log(process.env.IMGUR_CLIENT_ID)
 const adminController = {
     getRestaurants: (req, res) => {
         return Restaurant.findAll({
@@ -34,7 +34,7 @@ const adminController = {
             file
         } = req
         if (file) {
-            imgur.setClientID(IMGUR_CLIENT_ID)
+            imgur.setClientID(process.env.IMGUR_CLIENT_ID)
             imgur.upload(file.path, (err, img) => {
                 return Restaurant.create({
                     name: req.body.name,
@@ -92,7 +92,7 @@ const adminController = {
             file
         } = req
         if (file) {
-            imgur.setClientID(IMGUR_CLIENT_ID)
+            imgur.setClientID(process.env.IMGUR_CLIENT_ID)
             imgur.upload(file.path, (err, img) => {
                 return Restaurant.findByPk(req.params.id)
                     .then((restaurant) => {
@@ -206,7 +206,7 @@ const adminController = {
         console.log(file)
         if (file) {
 
-            imgur.setClientID(IMGUR_CLIENT_ID)
+            imgur.setClientID(process.env.IMGUR_CLIENT_ID)
             imgur.upload(file.path, (err, img) => {
                 return User.findByPk(req.params.id).then(user => {
                     user.update({
