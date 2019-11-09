@@ -43,6 +43,9 @@ module.exports = (app, passport) => {
     app.get('/admin/users', authenticatedAdmin, adminController.editUsers)
     app.put('/admin/users/:id', authenticatedAdmin, adminController.putUsers)
 
+    app.get('/users/top', authenticated, userController.getTopUser)
+    app.post('/following/:userId', authenticated, userController.addFollowing)
+    app.delete('/following/:userId', authenticated, userController.removeFollowing)
     app.get("/users/:id", authenticated, adminController.getUser)
     app.get("/users/:id/edit", authenticated, adminController.editUser)
     app.put("/users/:id", authenticated, upload.single('image'), adminController.putUser)
@@ -73,5 +76,7 @@ module.exports = (app, passport) => {
     app.delete("/favorite/:restaurantId", authenticated, userController.removeFavorite)
 
     app.post('/like/:restaurantId', authenticated, userController.addLike)
-app.delete('/like/:restaurantId', authenticated, userController.removeLike)
+    app.delete('/like/:restaurantId', authenticated, userController.removeLike)
+
+
 };

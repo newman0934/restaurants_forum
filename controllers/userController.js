@@ -3,7 +3,7 @@ const db = require("../models");
 const User = db.User;
 const Favorite = db.Favorite
 const Like = db.Like
-
+const Followship = db.Followship
 let userController = {
   signUpPage: (req, res) => {
     return res.render("signup");
@@ -98,6 +98,44 @@ let userController = {
            return res.redirect('back')
          })
       })
+   },
+
+   getTopUser: (req, res) => {
+     return User.findAll({
+       include: [
+         {model: User, as: "Followers"}
+       ]
+     }).then( users => {
+       users = users.map(user =>({
+         ...user.dataValues,
+         FollowerCount: user.Followers.length,
+         isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
+       }))
+       users = users.sort((a,b) => {b.Followercount - a.FollowerCount})
+       return res.render("topUser", {users})
+     })
+   },
+   addFollowing: (req, res) => {
+     return Followship.create({
+       followerId: req.user.id,
+       followingId: req.params.userId
+     }).then(followship => {
+       return res.redirect("back")
+     })
+   },
+   removeFollowing: (req, res) => {
+     return Followship.findOne({
+       where:{
+        followerId: req.user.id,
+        followingId: req.params.userId
+       }
+     }).then(followship => {
+       followship.destroy().then(
+         followship => {
+           return res.redirect("back")
+         }
+       )
+     })
    }
 };
 
