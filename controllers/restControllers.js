@@ -82,6 +82,24 @@ let restController = {
     return Restaurant.findByPk(req.params.id, {include: [Category, Comment]}).then(restaurant =>{
       res.render("dashboard",{restaurant})
     })
+  },
+  getTopRestaurants: (req, res) =>{
+    return Restaurant.findAll({
+      include: [
+        {model: User, as:"FavoritedUsers" }
+      ]
+    }).then(restaurants => {
+      restaurants = restaurants.map(restaurant => ({
+        ...restaurant.dataValues,
+        description: `${restaurant.dataValues.description.substring(0, 50)}...`,
+        favoriteCounts: restaurant.FavoritedUsers.length,
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(restaurant.id)
+      })
+    )
+      restaurants = restaurants.sort((a,b) => {return b.favoriteCounts - a.favoriteCounts}).slice(0,10)
+      console.log(restaurants)
+      return res.render("topRestaurants",{restaurants})
+    })
   }
 };
 

@@ -53,6 +53,7 @@ module.exports = (app, passport) => {
     app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
     app.get('/restaurants', authenticated, restControllers.getRestaurants)
     app.get("/restaurants/feeds", authenticated, restControllers.getFeeds)
+    app.get('/restaurants/top', authenticated, restControllers.getTopRestaurants)
     app.get('/restaurants/:id', authenticated, restControllers.getRestaurant)
     app.get('/restaurants/:id/dashboard', authenticated, restControllers.getDashboard)
     app.get("/signup", userController.signUpPage);
@@ -77,6 +78,7 @@ module.exports = (app, passport) => {
 
     app.post('/like/:restaurantId', authenticated, userController.addLike)
     app.delete('/like/:restaurantId', authenticated, userController.removeLike)
+    
 
 
 };
