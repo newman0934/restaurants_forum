@@ -165,23 +165,18 @@ const adminController = {
     getUser: (req, res) => {
         return User.findByPk(req.params.id, {
             include: [
-                Comment, {
-                    model: Comment,
-                    include: [Restaurant]
-                }
+                Comment,
+                {model: Comment, include: [Restaurant]},
+                {model: User, as: "Followers"},
+                {model: User, as: "Followings"},
+                {model: Restaurant, as:"FavoritedRestaurants"}
             ]
         }).then(user => {
-            let totalComments = user.dataValues.Comments.length
-            let commentRestaurant = []
-
-            user.Comments.map(item => {
-                commentRestaurant.push(item.Restaurant.image)
-            })
-
+            let set = new Set()
+            let commentRestaurant = user.Comments.filter(item =>!set.has(item.Restaurant.id)?  set.add(item.Restaurant.id): false)
             return res.render("user", {
                 user,
-                totalComments,
-                commentRestaurant
+                commentRestaurant,
             })
         })
         return res.redirect(`/users/${req.user.id}`)
