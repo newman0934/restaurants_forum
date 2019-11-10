@@ -190,7 +190,7 @@ const adminController = {
             })
         } else {
             req.flash("error_messages", "id不符")
-            return res.redirect(`/users/${req.user.id}/edit`)
+            return res.redirect(`/restaurants`)
         }
 
     },
@@ -198,7 +198,6 @@ const adminController = {
         const {
             file
         } = req
-        console.log(file)
         if (file) {
 
             imgur.setClientID(IMGUR_CLIENT_ID)
