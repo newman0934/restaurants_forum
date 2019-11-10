@@ -5,9 +5,12 @@
     <div class="col-sm-8">
         <p>{{user.name}}</p>
         <p>{{user.email}}</p>
+              {{#ifCond userId user.id}}
+
         <a href="/users/{{user.id}}/edit">
             <button class="btn btn-primary">編輯</button>
         </a>
+              {{/ifCond}}
     </div>
 </div>
 <div class="row border p-2 mb-2">

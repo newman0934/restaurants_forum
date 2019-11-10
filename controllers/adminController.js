@@ -177,6 +177,7 @@ const adminController = {
             return res.render("user", {
                 user,
                 commentRestaurant,
+                userId: req.user.id
             })
         })
         return res.redirect(`/users/${req.user.id}`)
