@@ -21,7 +21,7 @@ let userController = {
                 return res.status(401).json({ status: 'error', message: 'passwords did not match' })
             }
             let payload = {id: user.id}
-            let token = jwt.sign(payload, "alphacamp")
+            let token = jwt.sign(payload, process.env.JWT_SECRET)
             return res.json({
                 status: "success",
                 message: "ok",
